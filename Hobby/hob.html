@@ -23,7 +23,7 @@
         <label><input type="checkbox" name="hobby" value="게임/디지털"> 게임/디지털</label>
         <label class="full"><input type="checkbox" name="hobby" value="기타"> 기타</label>
       </div>
-      <button id="nextBtn" class="primary">다음</button>
+      <button id="nextBtn" class="primary" type="button">다음</button>
     </section>
 
     <!-- STEP 2: 추천 보기 -->
@@ -36,7 +36,16 @@
         <li class="recommend-item" data-hobby="등산">🥾 등산</li>
         <li class="recommend-item" data-hobby="보드게임">🎲 보드게임</li>
       </ul>
-      <p class="hint">마음에 드는 항목을 클릭하면 완료돼요.</p>
+      <p class="hint">하나를 클릭하면, 그 취미의 추천 크루로 넘어가요.</p>
+    </section>
+
+    <!-- STEP 3: 추천 크루 -->
+    <section id="step3" class="hidden">
+      <h2>추천 크루</h2>
+      <ul class="crew-list" id="crewList"></ul>
+      <div class="row gap-8">
+        <button id="skipCrew" class="primary" type="button">크루는 나중에 선택</button>
+      </div>
     </section>
   </main>
 </body>

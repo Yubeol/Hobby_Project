@@ -29,3 +29,25 @@ h2 { background:#e9ecef; padding:10px 14px; border-radius:10px; font-size:18px; 
 }
 .recommend-item:hover { border-color:#cdd7ff; box-shadow: 0 8px 22px rgba(41,98,255,.12); }
 .hint { color:#555; font-size:14px; margin-top:8px; }
+/* --- Crew Recommend --- */
+.crew-list{
+  list-style:none; padding:0; margin:16px 0 0;
+  display:grid; gap:14px;
+  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+}
+.crew-card{
+  display:flex; gap:10px; align-items:flex-start;
+  background:#fff; border:1px solid #eee; border-radius:14px; padding:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.04);
+}
+.crew-card img{
+  width:68px; height:68px; object-fit:cover; border-radius:10px;
+}
+.crew-info{flex:1}
+.crew-info h3{margin:0 0 6px; font-size:16px}
+.crew-meta{color:#666; font-size:12px}
+.crew-join{
+  margin-top:8px; width:100%;
+  border:1px solid #d0d7ff; background:#eef3ff; border-radius:999px; padding:8px;
+  cursor:pointer;
+}
