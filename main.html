@@ -2,118 +2,153 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>취미 웹 프로젝트</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>취미 프로젝트</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- 티맵 JS 추가 -->
-  <script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=티맵app키"></script>
+  <script defer src="app.js"></script>
 </head>
 <body>
-  <!-- 지도 영역 -->
-  <div id="map_div" style="width:100%; height:400px;"></div>
+  <header class="topbar">
+    <h1>취미 프로젝트</h1>
+    <nav>
+      <button id="backToMainBtn" class="ghost">메인</button>
+      <button id="toSignupBtn" class="ghost">회원가입</button>
+      <button id="toLoginBtn" class="ghost">로그인</button>
+      <button id="logoutBtn" class="danger hidden">로그아웃</button>
+    </nav>
+  </header>
 
-  <!-- 메인 페이지 -->
-  <div id="mainPage">
-    <h1>타이틀</h1>
+  <!-- 메인 -->
+  <section id="mainPage" class="page">
+    <!-- 헤더 블럭(목업 스타일) -->
+    <div class="hero">
+      <div class="brand">타이틀</div>
 
-    <section>
+      <div class="hero-right">
+        <!-- 검색바 -->
+        <div class="searchbar">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21 21l-4.3-4.3m1.3-5.7a7 7 0 11-14 0 7 7 0 0114 0z" fill="none" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          <input type="text" placeholder="Search" />
+          <button class="mic" type="button" aria-label="음성 검색">🎤</button>
+        </div>
+
+        <!-- 아이콘/버튼 -->
+        <div class="quick-icons">
+          <button class="circle" title="프로필">👤</button>
+          <button class="circle" title="메시지">✉️</button>
+          <button class="circle" title="관심">♡</button>
+          <!-- <button id="goLogin" class="ghost small">로그인</button> -->
+          <button id="goMy" class="ghost small">마이페이지</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEST 크루 -->
+    <section class="best-wrap">
       <h2>BEST 크루</h2>
-      <div class="crew-list">
-        <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" alt="crew1" />
-        <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80" alt="crew2" />
-        <img src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?auto=format&fit=crop&w=400&q=80" alt="crew3" />
+      <div class="best-grid">
+        <a class="best-card" href="#">
+          <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1200&auto=format&fit=crop" alt="조깅 크루">
+        </a>
+        <a class="best-card" href="#">
+          <img src="https://images.unsplash.com/photo-1589927986089-35812388d1ab?q=80&w=1200&auto=format&fit=crop" alt="볼링 크루">
+        </a>
+        <a class="best-card" href="#">
+          <img src="https://images.unsplash.com/photo-1494390248081-4e521a5940db?q=80&w=1200&auto=format&fit=crop" alt="독서 크루">
+        </a>
       </div>
     </section>
 
-    <section>
+    <!-- 커뮤니티 -->
+    <section class="community">
       <h2>커뮤니티</h2>
-      <div class="community-list">
-        <div class="community-box"></div>
-        <div class="community-box"></div>
-        <div class="community-box"></div>
+      <div class="comm-grid">
+        <article class="comm-card"></article>
+        <article class="comm-card"></article>
+        <article class="comm-card"></article>
       </div>
     </section>
 
-    <div class="button-group">
-      <button id="toLoginBtn">로그인</button>
-      <button id="toSignupBtn">회원가입</button>
+    <!-- 푸터 -->
+    <footer class="footer">
+      <div>
+        <div class="ft-title">help</div>
+        <a href="#">FAQ</a><a href="#">Contact</a>
+      </div>
+      <div>
+        <div class="ft-title">News</div>
+        <a href="#">Notice</a><a href="#">Update</a>
+      </div>
+      <div>
+        <div class="ft-title">instagram</div>
+        <a href="#">@yourbrand</a>
+      </div>
+    </footer>
+  </section>
+
+  <!-- 인증 영역 -->
+  <section id="authPage" class="page hidden">
+    <div class="grid-2">
+      <!-- 회원가입 -->
+      <form id="signupForm" class="card">
+        <h3>회원가입</h3>
+        <label>아이디 <input id="signupId" required /></label>
+        <label>비밀번호 <input id="signupPw" type="password" required /></label>
+
+        <div class="row gap-8">
+          <label><input type="radio" name="gender" value="M"> 남</label>
+          <label><input type="radio" name="gender" value="F"> 여</label>
+        </div>
+
+        <div class="row gap-8">
+          <select id="birthYear" required></select>
+          <select id="birthMonth" required></select>
+          <select id="birthDay" required></select>
+        </div>
+
+        <label>주소 <input id="address" placeholder="선택사항"/></label>
+
+        <label>MBTI
+          <select id="mbtiSelect">
+            <option value="">선택</option>
+            <option>INTJ</option><option>INTP</option><option>ENTJ</option><option>ENTP</option>
+            <option>INFJ</option><option>INFP</option><option>ENFJ</option><option>ENFP</option>
+            <option>ISTJ</option><option>ISFJ</option><option>ESTJ</option><option>ESFJ</option>
+            <option>ISTP</option><option>ISFP</option><option>ESTP</option><option>ESFP</option>
+          </select>
+        </label>
+
+        <button class="primary" type="submit">가입하고 취미 설정하기</button>
+      </form>
+
+      <!-- 로그인 -->
+      <form id="loginForm" class="card">
+        <h3>로그인</h3>
+        <label>아이디 <input id="loginId" required /></label>
+        <label>비밀번호 <input id="loginPw" type="password" required /></label>
+        <button class="secondary" type="submit">로그인 후 취미 설정하기</button>
+      </form>
     </div>
-  </div>
+  </section>
 
-  <!-- 회원가입 창 -->
-  <div id="signupForm" class="hidden">
-    <h2>회원가입</h2>
-    <input type="text" id="signupId" placeholder="아이디" />
-    <input type="password" id="signupPw" placeholder="비밀번호" />
-
-    <!-- 성별 -->
-    <div class="gender-group">
-      성별:
-      <label><input type="radio" name="gender" value="남" /> 남</label>
-      <label><input type="radio" name="gender" value="여" /> 여</label>
+  <!-- 마이페이지 -->
+  <section id="myPage" class="page hidden">
+    <div class="card">
+      <h2>마이페이지</h2>
+      <p id="myInfo"></p>
+      <div id="myHobbyBox" class="pillbox"></div>
     </div>
+  </section>
 
-    <!-- 생년월일 -->
-    <div class="birth-group">
-      생년월일:
-      <select id="birthYear"></select> 년
-      <select id="birthMonth"></select> 월
-      <select id="birthDay"></select> 일
-    </div>
+  <!-- 기타 섹션(숨김 유지 가능) -->
+  <section id="map" class="page hidden"><div class="card"><h3>지도</h3></div></section>
+  <section id="board" class="page hidden"><div class="card"><h3>게시판</h3></div></section>
+  <section id="chartContainer" class="page hidden"><div class="card"><h3>차트</h3></div></section>
 
-    <!-- 주소 -->
-    <div class="address-group">
-      <input type="text" id="address" placeholder="주소를 입력해주세요" />
-    </div>
-
-    <!-- MBTI -->
-    <div class="mbti-group">
-      MBTI:
-      <select id="mbtiSelect"></select>
-    </div>
-
-    <button onclick="signup()">회원가입</button>
-    <button id="backToMainFromSignupBtn">뒤로가기</button>
-  </div>
-
-  <!-- 로그인 창 -->
-  <div id="loginForm" class="hidden">
-    <h2>로그인</h2>
-    <input type="text" id="loginId" placeholder="아이디" />
-    <input type="password" id="loginPw" placeholder="비밀번호" />
-    <button onclick="login()">로그인</button>
-    <button id="backToMainFromLoginBtn">뒤로가기</button>
-  </div>
-
-  <!-- 로그인 후 마이페이지 -->
-  <div id="myPage" class="hidden">
-    <h2>마이페이지</h2>
-    <p>안녕하세요, <span id="userIdDisplay"></span>님!</p>
-    <button onclick="logout()">로그아웃</button>
-  </div>
-
-  <!-- 지도 -->
-  <div id="map" class="hidden"></div>
-
-  <!-- 게시판 -->
-  <div id="board" class="hidden">
-    <h2>게시판</h2>
-    <input type="text" id="postInput" placeholder="게시글 작성" />
-    <button onclick="addPost()">글쓰기</button>
-    <ul id="postList"></ul>
-  </div>
-
-  <!-- 통계 -->
-  <div id="chartContainer" class="hidden">
-    <h2>게시글</h2>
-    <canvas id="postChart"></canvas>
-  </div>
-
-  <!-- Hobby 폴더의 hob.html 불러오기 -->
-  <iframe src="Hobby/hob.html" width="100%" height="600px" frameborder="0" class="hidden" id="hobFrame"></iframe>
-
-  <script src="app.js"></script>
+  <!-- 취미 설문 iframe -->
+  <iframe src="Hobby/hob.html" width="100%" height="640" frameborder="0"
+          class="hidden" id="hobFrame"></iframe>
 </body>
 </html>

@@ -1,173 +1,189 @@
+// --- 상태 (localStorage) ---
 let users = [];
 let currentUser = null;
-let posts = [];
 
-// DOM 요소 가져오기
+function loadState() {
+  try {
+    users = JSON.parse(localStorage.getItem('users') || '[]');
+  } catch { users = []; }
+  try {
+    currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+  } catch { currentUser = null; }
+}
+function saveState() {
+  try { localStorage.setItem('users', JSON.stringify(users)); } catch {}
+  try { localStorage.setItem('currentUser', JSON.stringify(currentUser)); } catch {}
+}
+loadState();
+
+// --- DOM ---
 const mainPage = document.getElementById('mainPage');
+const authPage = document.getElementById('authPage');
 const signupForm = document.getElementById('signupForm');
-const loginForm = document.getElementById('loginForm');
-const myPage = document.getElementById('myPage');
-const map = document.getElementById('map');
-const board = document.getElementById('board');
+const loginForm  = document.getElementById('loginForm');
+const myPage     = document.getElementById('myPage');
+const map        = document.getElementById('map');
+const board      = document.getElementById('board');
 const chartContainer = document.getElementById('chartContainer');
+const hobFrame   = document.getElementById('hobFrame');
 
-const toLoginBtn = document.getElementById('toLoginBtn');
-const toSignupBtn = document.getElementById('toSignupBtn');
-const backToMainFromSignupBtn = document.getElementById('backToMainFromSignupBtn');
-const backToMainFromLoginBtn = document.getElementById('backToMainFromLoginBtn');
+const toLoginBtn   = document.getElementById('toLoginBtn');
+const toSignupBtn  = document.getElementById('toSignupBtn');
+const backToMainBtn= document.getElementById('backToMainBtn');
+const logoutBtn    = document.getElementById('logoutBtn');
+const goSignup     = document.getElementById('goSignup');
+const goLogin      = document.getElementById('goLogin');
+const goMy         = document.getElementById('goMy'); // 추가 ✅
 
-// 로그인 폼 보여주기
-toLoginBtn.addEventListener('click', () => {
-  mainPage.classList.add('hidden');
-  signupForm.classList.add('hidden');
-  loginForm.classList.remove('hidden');
+const myInfo       = document.getElementById('myInfo');
+const myHobbyBox   = document.getElementById('myHobbyBox');
+
+// --- 유틸 ---
+function hideAll() {
+  [mainPage, authPage, signupForm, loginForm, myPage, map, board, chartContainer].forEach(el => el.classList.add('hidden'));
+  hobFrame.classList.add('hidden');
+}
+function show(page) {
+  hideAll();
+  page.classList.remove('hidden');
+}
+function showAuth(which = 'login') {
+  hideAll();
+  authPage.classList.remove('hidden');
+  signupForm.classList.toggle('hidden', which !== 'signup');
+  loginForm.classList.toggle('hidden', which !== 'login');
+}
+function showHobbyPage() {
+  hideAll();
+  hobFrame.classList.remove('hidden');
+  logoutBtn.classList.toggle('hidden', !currentUser);
+}
+function showMyPage() {
+  hideAll();
+  myPage.classList.remove('hidden');
+  renderMyPage();
+  logoutBtn.classList.toggle('hidden', !currentUser);
+}
+function renderMyPage() {
+  if (!currentUser) return;
+  const { id, gender, birthdate, mbti, address } = currentUser;
+  myInfo.textContent = `ID: ${id || '-'} / 성별: ${gender || '-'} / 생일: ${birthdate || '-'} / MBTI: ${mbti || '-'} / 주소: ${address || '-'}`;
+  myHobbyBox.innerHTML = '';
+  const pills = [
+    ...(currentUser.hobbies || []),
+    ...(currentUser.chosenHobby ? [currentUser.chosenHobby] : []),
+  ];
+  pills.forEach(p => {
+    const s = document.createElement('span');
+    s.className = 'pill';
+    s.textContent = p;
+    myHobbyBox.appendChild(s);
+  });
+}
+
+// --- 초기 화면 ---
+if (currentUser) {
+  // 이미 로그인 되어있다면 취미 완료 여부에 따라 분기
+  if (currentUser.hobbyCompleted) showMyPage();
+  else showHobbyPage();
+} else {
+  show(mainPage);
+  logoutBtn.classList.add('hidden');
+}
+
+// --- 버튼 네비게이션 ---
+backToMainBtn.addEventListener('click', () => show(mainPage));
+toSignupBtn.addEventListener('click', () => showAuth('signup'));
+toLoginBtn.addEventListener('click', () => showAuth('login'));
+goSignup?.addEventListener('click', () => showAuth('signup'));
+goLogin?.addEventListener('click', () => showAuth('login'));
+goMy?.addEventListener('click', () => currentUser ? showMyPage() : showAuth('login')); // 추가 ✅
+
+logoutBtn.addEventListener('click', () => {
+  currentUser = null;
+  saveState();
+  logoutBtn.classList.add('hidden');
+  show(mainPage);
 });
 
-// 회원가입 폼 보여주기
-toSignupBtn.addEventListener('click', () => {
-  mainPage.classList.add('hidden');
-  loginForm.classList.add('hidden');
-  signupForm.classList.remove('hidden');
-});
+// --- 날짜 셀렉트 채우기 (회원가입용) ---
+(function fillBirthSelects(){
+  const y = document.getElementById('birthYear');
+  const m = document.getElementById('birthMonth');
+  const d = document.getElementById('birthDay');
+  if (!y || !m || !d) return;
+  const now = new Date().getFullYear();
+  for (let i = now; i >= 1930; i--) {
+    const opt = document.createElement('option'); opt.value = opt.textContent = i; y.appendChild(opt);
+  }
+  for (let i = 1; i <= 12; i++) {
+    const opt = document.createElement('option'); opt.value = String(i).padStart(2,'0'); opt.textContent = i; m.appendChild(opt);
+  }
+  for (let i = 1; i <= 31; i++) {
+    const opt = document.createElement('option'); opt.value = String(i).padStart(2,'0'); opt.textContent = i; d.appendChild(opt);
+  }
+})();
 
-// 회원가입 폼 뒤로가기
-backToMainFromSignupBtn.addEventListener('click', () => {
-  signupForm.classList.add('hidden');
-  mainPage.classList.remove('hidden');
-});
-
-// 로그인 폼 뒤로가기
-backToMainFromLoginBtn.addEventListener('click', () => {
-  loginForm.classList.add('hidden');
-  mainPage.classList.remove('hidden');
-});
-
-// 회원가입 함수
-function signup() {
+// --- 회원가입 ---
+signupForm.addEventListener('submit', (e) => {
+  e.preventDefault();
   const id = document.getElementById('signupId').value.trim();
   const pw = document.getElementById('signupPw').value.trim();
-  const gender = document.querySelector('input[name="gender"]:checked')?.value;
-  const birthYear = document.getElementById('birthYear').value;
-  const birthMonth = document.getElementById('birthMonth').value;
-  const birthDay = document.getElementById('birthDay').value;
+  const gender = [...document.querySelectorAll('input[name="gender"]')].find(x => x.checked)?.value || '';
+  const birthdate = `${document.getElementById('birthYear').value}-${document.getElementById('birthMonth').value}-${document.getElementById('birthDay').value}`;
   const address = document.getElementById('address').value.trim();
   const mbti = document.getElementById('mbtiSelect').value;
 
-  if (!id || !pw || !gender || !birthYear || !birthMonth || !birthDay || !address || !mbti) {
-    alert('모든 정보를 입력해주세요.');
-    return;
-  }
+  if (!id || !pw) return alert('아이디/비밀번호를 입력하세요.');
+  if (users.some(u => u.id === id)) return alert('이미 존재하는 아이디입니다.');
 
-  if (users.find(user => user.id === id)) {
-    alert('이미 존재하는 아이디입니다.');
-    return;
-  }
+  const newUser = { id, pw, gender, birthdate, address, mbti, hobbies: [], hobbyCompleted: false };
+  users.push(newUser);
+  currentUser = newUser;
+  saveState();
 
-  const birthdate = `${birthYear}-${birthMonth}-${birthDay}`;
-  users.push({ id, pw, gender, birthdate, address, mbti });
-  alert('회원가입 성공!');
-  signupForm.classList.add('hidden');
-  loginForm.classList.remove('hidden');
+  alert('회원가입 성공! 취미 설정으로 이동합니다.');
+  showHobbyPage();
 
   // 입력 초기화
-  ['signupId','signupPw','address'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.querySelectorAll('input[name="gender"]').forEach(el => el.checked = false);
-  document.getElementById('mbtiSelect').selectedIndex = 0;
-}
+  signupForm.reset();
+});
 
-// 로그인 처리
-function login() {
+// --- 로그인 ---
+loginForm.addEventListener('submit', (e) => {
+  e.preventDefault();
   const id = document.getElementById('loginId').value.trim();
   const pw = document.getElementById('loginPw').value.trim();
   const user = users.find(u => u.id === id && u.pw === pw);
-
-  if (!user) {
-    alert('로그인 실패. 아이디/비밀번호 확인');
-    return;
-  }
+  if (!user) return alert('아이디/비밀번호를 확인하세요.');
 
   currentUser = user;
-  loginForm.classList.add('hidden');
-  myPage.classList.remove('hidden');
-  document.getElementById('userIdDisplay').textContent = user.id;
-  board.classList.remove('hidden');
-  map.classList.remove('hidden');
-  chartContainer.classList.remove('hidden');
+  saveState();
 
-  // loadMap(); // 티맵 API로 변경 필요
-  updateChart();
+  // 취미 미완료 시 취미 페이지부터
+  if (!currentUser.hobbyCompleted) showHobbyPage();
+  else showMyPage();
 
-  document.getElementById('loginId').value = '';
-  document.getElementById('loginPw').value = '';
-}
+  loginForm.reset();
+});
 
-// 로그아웃 처리
-function logout() {
-  currentUser = null;
-  myPage.classList.add('hidden');
-  board.classList.add('hidden');
-  map.classList.add('hidden');
-  chartContainer.classList.add('hidden');
-  mainPage.classList.remove('hidden');
-}
+// --- hob.html(iframe)에서 취미 완료 신호 받기 ---
+window.addEventListener('message', (ev) => {
+  if (ev?.data?.type !== 'HOBBY_DONE') return;
 
-// 게시글 추가
-function addPost() {
-  const input = document.getElementById('postInput');
-  if (!input.value.trim()) return;
-  posts.push({ author: currentUser.id, content: input.value });
-  renderPosts();
-  updateChart();
-  input.value = '';
-}
+  const { selectedHobbies = [], chosenHobby = '' } = ev.data;
+  if (!currentUser) return;
 
-// 게시글 렌더링
-function renderPosts() {
-  const list = document.getElementById('postList');
-  list.innerHTML = '';
-  posts.forEach(post => {
-    const li = document.createElement('li');
-    li.textContent = `[${post.author}] ${post.content}`;
-    list.appendChild(li);
-  });
-}
+  currentUser.hobbyCompleted = true;
+  currentUser.hobbies = selectedHobbies;
+  currentUser.chosenHobby = chosenHobby;
 
-// 그래프 업데이트
-function updateChart() {
-  const counts = {};
-  posts.forEach(post => {
-    counts[post.author] = (counts[post.author] || 0) + 1;
-  });
+  // users 배열 반영
+  const i = users.findIndex(u => u.id === currentUser.id);
+  if (i !== -1) users[i] = currentUser;
 
-  const ctx = document.getElementById('postChart').getContext('2d');
-  if (window.postChart) window.postChart.destroy();
-  window.postChart = new Chart(ctx, {
-    type: 'bar',
-    data: { labels: Object.keys(counts), datasets: [{ label: '게시글 수', data: Object.values(counts), backgroundColor: '#4a90e2' }] },
-    options: { responsive: true, scales: { y: { beginAtZero: true } } }
-  });
-}
+  saveState();
 
-// 생년월일 및 MBTI 옵션 초기화
-document.addEventListener('DOMContentLoaded', () => {
-  const yearSel = document.getElementById('birthYear');
-  const monthSel = document.getElementById('birthMonth');
-  const daySel = document.getElementById('birthDay');
-  const mbtiSel = document.getElementById('mbtiSelect');
-
-  const year = new Date().getFullYear();
-  for (let y = year; y >= 1900; y--) yearSel.add(new Option(y, y));
-  for (let m = 1; m <= 12; m++) monthSel.add(new Option(m, m));
-  for (let d = 1; d <= 31; d++) daySel.add(new Option(d, d));
-
-  monthSel.addEventListener('change', () => {
-    const days = new Date(yearSel.value, monthSel.value, 0).getDate();
-    daySel.innerHTML = '';
-    for (let d = 1; d <= days; d++) daySel.add(new Option(d, d));
-  });
-
-  ['ISTJ','ISFJ','INFJ','INTJ','ISTP','ISFP','INFP','INTP','ESTP','ESFP','ENFP','ENTP','ESTJ','ESFJ','ENFJ','ENTJ']
-    .forEach(type => mbtiSel.add(new Option(type, type)));
+  // 취미 끝 → 마이페이지로 이동
+  showMyPage();
 });

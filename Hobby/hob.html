@@ -1,34 +1,43 @@
-<!-- 첫 화면 -->
-<div id="firstPage">
-  <h2>당신의 취미는?</h2>
-  <div>
-    <label><input type="checkbox" name="hobby" value="예술/창작"> 예술/창작</label>
-    <label><input type="checkbox" name="hobby" value="지식/학습"> 지식/학습</label>
-    <label><input type="checkbox" name="hobby" value="감성/활동"> 감성/활동</label>
-    <label><input type="checkbox" name="hobby" value="음악/감상"> 음악/감상</label>
-    <label><input type="checkbox" name="hobby" value="운동/신체활동"> 운동/신체활동</label>
-    <label><input type="checkbox" name="hobby" value="게임/디지털"> 게임/디지털</label>
-    <label><input type="checkbox" name="hobby" value="기타"> 기타</label>
-  </div>
-  <button id="toRecommendHobbyBtn">다음</button>
-</div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>당신의 취미는?</title>
+  <link rel="stylesheet" href="./hob.css" />
+  <script defer src="./hob.js"></script>
+</head>
+<body>
+  <main class="wrap">
+    <h1>당신의 취미는?</h1>
 
-<!-- 추천 취미 화면 -->
-<div id="recommendHobbyPage" class="hidden">
-  <h2>호비가 추천하는 당신의 취미</h2>
-  <div class="recommend-list">
-    <!-- 취미 추천 아이템들 -->
-    <div class="recommend-item" data-hobby="검도">
-      <p>취미1<br>검도</p>
-      <img src="kendo.jpg" alt="검도" />
-    </div>
-    <div class="recommend-item" data-hobby="클라이밍">
-      <p>취미2<br>클라이밍</p>
-      <img src="climbing.jpg" alt="클라이밍" />
-    </div>
-    <div class="recommend-item" data-hobby="익스트림">
-      <p>취미3<br>익스트림</p>
-      <img src="extreme.jpg" alt="익스트림" />
-    </div>
-  </div>
-</div>
+    <!-- STEP 1: 활동 유형 선택 -->
+    <section id="step1">
+      <h2>&lt;선호하는 활동유형&gt;</h2>
+      <div class="checks">
+        <label><input type="checkbox" name="hobby" value="예술/창작"> 예술/창작</label>
+        <label><input type="checkbox" name="hobby" value="지식/학습"> 지식/학습</label>
+        <label><input type="checkbox" name="hobby" value="감성/활동"> 감성/활동</label>
+        <label><input type="checkbox" name="hobby" value="음악/감상"> 음악/감상</label>
+        <label><input type="checkbox" name="hobby" value="운동/신체활동"> 운동/신체활동</label>
+        <label><input type="checkbox" name="hobby" value="게임/디지털"> 게임/디지털</label>
+        <label class="full"><input type="checkbox" name="hobby" value="기타"> 기타</label>
+      </div>
+      <button id="nextBtn" class="primary">다음</button>
+    </section>
+
+    <!-- STEP 2: 추천 보기 -->
+    <section id="step2" class="hidden">
+      <h2>이런 취미는 어때요?</h2>
+      <ul class="recommend-list">
+        <li class="recommend-item" data-hobby="드로잉/페인팅">🎨 드로잉/페인팅</li>
+        <li class="recommend-item" data-hobby="검도">⚔️ 검도</li>
+        <li class="recommend-item" data-hobby="기타 연주">🎸 기타 연주</li>
+        <li class="recommend-item" data-hobby="등산">🥾 등산</li>
+        <li class="recommend-item" data-hobby="보드게임">🎲 보드게임</li>
+      </ul>
+      <p class="hint">마음에 드는 항목을 클릭하면 완료돼요.</p>
+    </section>
+  </main>
+</body>
+</html>
