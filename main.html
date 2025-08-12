@@ -9,24 +9,28 @@
 </head>
 <body>
   <header class="topbar">
-    <h1>취미 프로젝트</h1>
-    <nav>
-      <button id="backToMainBtn" class="ghost">메인</button>
-      <button id="toSignupBtn" class="ghost">회원가입</button>
-      <button id="toLoginBtn" class="ghost">로그인</button>
-      <button id="logoutBtn" class="danger hidden">로그아웃</button>
-    </nav>
+    <div class="container topbar-inner">
+      <h1 class="logo">취미 프로젝트</h1>
+      <nav class="top-actions">
+        <button id="backToMainBtn" class="ghost">메인</button>
+        <button id="toSignupBtn" class="ghost">회원가입</button>
+        <button id="toLoginBtn" class="ghost">로그인</button>
+        <button id="deleteAccountBtn" class="danger hidden">계정 삭제</button>
+        <button id="resetBtn" class="danger">데이터 초기화</button>
+        <button id="logoutBtn" class="danger hidden">로그아웃</button>
+      </nav>
+    </div>
   </header>
 
   <!-- 메인 -->
   <section id="mainPage" class="page">
-    <!-- 헤더 블럭(목업 스타일) -->
-    <div class="hero">
-      <div class="brand">타이틀</div>
+    <div class="container">
 
-      <div class="hero-right">
-        <!-- 검색바 -->
-        <div class="searchbar">
+      <!-- 헤더 블록 -->
+      <div class="hero-row">
+        <div class="brand-pill">타이틀</div>
+
+        <div class="search-pill">
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M21 21l-4.3-4.3m1.3-5.7a7 7 0 11-14 0 7 7 0 0114 0z" fill="none" stroke="currentColor" stroke-width="2"/>
           </svg>
@@ -34,82 +38,78 @@
           <button class="mic" type="button" aria-label="음성 검색">🎤</button>
         </div>
 
-        <!-- 아이콘/버튼 -->
-        <div class="quick-icons">
+        <div class="icon-group">
           <button class="circle" title="프로필">👤</button>
           <button class="circle" title="메시지">✉️</button>
           <button class="circle" title="관심">♡</button>
-          <!-- <button id="goLogin" class="ghost small">로그인</button> -->
           <button id="goMy" class="ghost small">마이페이지</button>
         </div>
       </div>
+
+      <!-- BEST 크루 패널 -->
+      <section class="panel">
+        <h2 class="panel-title">BEST 크루</h2>
+        <div class="best-grid">
+          <a class="best-card" href="#">
+            <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1200&auto=format&fit=crop" alt="조깅 크루">
+          </a>
+
+          <a class="best-card placeholder" href="#">
+            <span>추천 크루</span>
+          </a>
+
+          <a class="best-card" href="#">
+            <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=1200&auto=format&fit=crop" alt="브런치 모임">
+          </a>
+        </div>
+      </section>
+
+      <!-- 커뮤니티 -->
+      <section class="community-wrap">
+        <h2 class="community-title">커뮤니티</h2>
+        <div class="comm-grid">
+          <article class="comm-card"></article>
+          <article class="comm-card"></article>
+          <article class="comm-card"></article>
+        </div>
+      </section>
+
+      <!-- 푸터 -->
+      <footer class="footer panel">
+        <div>
+          <div class="ft-title">help</div>
+          <a href="#">FAQ</a><a href="#">Contact</a>
+        </div>
+        <div>
+          <div class="ft-title">News</div>
+          <a href="#">Notice</a><a href="#">Update</a>
+        </div>
+        <div>
+          <div class="ft-title">instagram</div>
+          <a href="#">@yourbrand</a>
+        </div>
+      </footer>
+
     </div>
-
-    <!-- BEST 크루 -->
-    <section class="best-wrap">
-      <h2>BEST 크루</h2>
-      <div class="best-grid">
-        <a class="best-card" href="#">
-          <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1200&auto=format&fit=crop" alt="조깅 크루">
-        </a>
-        <a class="best-card" href="#">
-          <img src="https://images.unsplash.com/photo-1589927986089-35812388d1ab?q=80&w=1200&auto=format&fit=crop" alt="볼링 크루">
-        </a>
-        <a class="best-card" href="#">
-          <img src="https://images.unsplash.com/photo-1494390248081-4e521a5940db?q=80&w=1200&auto=format&fit=crop" alt="독서 크루">
-        </a>
-      </div>
-    </section>
-
-    <!-- 커뮤니티 -->
-    <section class="community">
-      <h2>커뮤니티</h2>
-      <div class="comm-grid">
-        <article class="comm-card"></article>
-        <article class="comm-card"></article>
-        <article class="comm-card"></article>
-      </div>
-    </section>
-
-    <!-- 푸터 -->
-    <footer class="footer">
-      <div>
-        <div class="ft-title">help</div>
-        <a href="#">FAQ</a><a href="#">Contact</a>
-      </div>
-      <div>
-        <div class="ft-title">News</div>
-        <a href="#">Notice</a><a href="#">Update</a>
-      </div>
-      <div>
-        <div class="ft-title">instagram</div>
-        <a href="#">@yourbrand</a>
-      </div>
-    </footer>
   </section>
 
-  <!-- 인증 영역 -->
+  <!-- 인증/마이페이지/기타(그대로 유지) -->
   <section id="authPage" class="page hidden">
-    <div class="grid-2">
-      <!-- 회원가입 -->
+    <div class="container grid-2">
       <form id="signupForm" class="card">
         <h3>회원가입</h3>
         <label>아이디 <input id="signupId" required /></label>
         <label>비밀번호 <input id="signupPw" type="password" required /></label>
-
         <div class="row gap-8">
           <label><input type="radio" name="gender" value="M"> 남</label>
           <label><input type="radio" name="gender" value="F"> 여</label>
         </div>
-
         <div class="row gap-8">
           <select id="birthYear" required></select>
           <select id="birthMonth" required></select>
           <select id="birthDay" required></select>
         </div>
-
         <label>주소 <input id="address" placeholder="선택사항"/></label>
-
         <label>MBTI
           <select id="mbtiSelect">
             <option value="">선택</option>
@@ -119,11 +119,9 @@
             <option>ISTP</option><option>ISFP</option><option>ESTP</option><option>ESFP</option>
           </select>
         </label>
-
         <button class="primary" type="submit">가입하고 취미 설정하기</button>
       </form>
 
-      <!-- 로그인 -->
       <form id="loginForm" class="card">
         <h3>로그인</h3>
         <label>아이디 <input id="loginId" required /></label>
@@ -133,19 +131,19 @@
     </div>
   </section>
 
-  <!-- 마이페이지 -->
   <section id="myPage" class="page hidden">
-    <div class="card">
-      <h2>마이페이지</h2>
-      <p id="myInfo"></p>
-      <div id="myHobbyBox" class="pillbox"></div>
+    <div class="container">
+      <div class="card">
+        <h2>마이페이지</h2>
+        <p id="myInfo"></p>
+        <div id="myHobbyBox" class="pillbox"></div>
+      </div>
     </div>
   </section>
 
-  <!-- 기타 섹션(숨김 유지 가능) -->
-  <section id="map" class="page hidden"><div class="card"><h3>지도</h3></div></section>
-  <section id="board" class="page hidden"><div class="card"><h3>게시판</h3></div></section>
-  <section id="chartContainer" class="page hidden"><div class="card"><h3>차트</h3></div></section>
+  <section id="map" class="page hidden"><div class="container"><div class="card"><h3>지도</h3></div></div></section>
+  <section id="board" class="page hidden"><div class="container"><div class="card"><h3>게시판</h3></div></div></section>
+  <section id="chartContainer" class="page hidden"><div class="container"><div class="card"><h3>차트</h3></div></div></section>
 
   <!-- 취미 설문 iframe -->
   <iframe src="Hobby/hob.html" width="100%" height="640" frameborder="0"

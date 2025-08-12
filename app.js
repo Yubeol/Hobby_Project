@@ -23,13 +23,17 @@ const board      = document.getElementById('board');
 const chartContainer = document.getElementById('chartContainer');
 const hobFrame   = document.getElementById('hobFrame');
 
-const toLoginBtn   = document.getElementById('toLoginBtn');     // 없으면 무시됨(?. 사용)
+const toLoginBtn   = document.getElementById('toLoginBtn');
 const toSignupBtn  = document.getElementById('toSignupBtn');
 const backToMainBtn= document.getElementById('backToMainBtn');
 const logoutBtn    = document.getElementById('logoutBtn');
 const goSignup     = document.getElementById('goSignup');
 const goLogin      = document.getElementById('goLogin');
 const goMy         = document.getElementById('goMy');
+
+// 추가 버튼
+const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+const resetBtn         = document.getElementById('resetBtn');
 
 const myInfo       = document.getElementById('myInfo');
 const myHobbyBox   = document.getElementById('myHobbyBox');
@@ -42,7 +46,9 @@ function hideAll() {
 function show(page) {
   hideAll();
   page?.classList.remove('hidden');
-  logoutBtn?.classList.toggle('hidden', !currentUser);
+  const isIn = !!currentUser;
+  logoutBtn?.classList.toggle('hidden', !isIn);
+  deleteAccountBtn?.classList.toggle('hidden', !isIn);
 }
 function showAuth(which = 'login') {
   hideAll();
@@ -50,34 +56,30 @@ function showAuth(which = 'login') {
   signupForm?.classList.toggle('hidden', which !== 'signup');
   loginForm?.classList.toggle('hidden', which !== 'login');
   logoutBtn?.classList.add('hidden');
+  deleteAccountBtn?.classList.add('hidden');
 }
 function showHobbyPage() {
   hideAll();
-
-  // 1) 이미 로드된 iframe이면 Step1로 리셋 메시지 전송
-  try {
-    hobFrame.contentWindow?.postMessage({ type: 'RESET_HOBBY' }, '*');
-  } catch {}
-
-  // 2) 아직 로드 전이거나 이전 상태가 남아있을 수 있으니 강제 리로드 + 로드 후 재리셋
+  try { hobFrame?.contentWindow?.postMessage({ type: 'RESET_HOBBY' }, '*'); } catch {}
   const base = hobFrame.getAttribute('data-base') || 'Hobby/hob.html';
   hobFrame.setAttribute('data-base', base);
-  hobFrame.src = `${base}?t=${Date.now()}`; // 캐시 방지용 파라미터
-
+  hobFrame.src = `${base}?t=${Date.now()}`;
   hobFrame.addEventListener('load', () => {
-    try {
-      hobFrame.contentWindow?.postMessage({ type: 'RESET_HOBBY' }, '*');
-    } catch {}
+    try { hobFrame.contentWindow?.postMessage({ type: 'RESET_HOBBY' }, '*'); } catch {}
   }, { once: true });
 
   hobFrame.classList.remove('hidden');
-  logoutBtn?.classList.toggle('hidden', !currentUser);
+  const isIn = !!currentUser;
+  logoutBtn?.classList.toggle('hidden', !isIn);
+  deleteAccountBtn?.classList.toggle('hidden', !isIn);
 }
 function showMyPage() {
   hideAll();
   myPage?.classList.remove('hidden');
   renderMyPage();
-  logoutBtn?.classList.toggle('hidden', !currentUser);
+  const isIn = !!currentUser;
+  logoutBtn?.classList.toggle('hidden', !isIn);
+  deleteAccountBtn?.classList.toggle('hidden', !isIn);
 }
 function renderMyPage() {
   if (!currentUser) return;
@@ -98,7 +100,6 @@ function renderMyPage() {
       s.textContent = p;
       myHobbyBox.appendChild(s);
     });
-    // 선택한 크루 표시(있으면)
     if (currentUser.crewChoice) {
       const c = currentUser.crewChoice;
       const s = document.createElement('span');
@@ -115,9 +116,10 @@ if (currentUser) {
 } else {
   show(mainPage);
   logoutBtn?.classList.add('hidden');
+  deleteAccountBtn?.classList.add('hidden');
 }
 
-// --- 상단/히어로 버튼 ---
+// --- 네비 ---
 backToMainBtn?.addEventListener('click', () => show(mainPage));
 toSignupBtn?.addEventListener('click', () => showAuth('signup'));
 toLoginBtn?.addEventListener('click', () => showAuth('login'));
@@ -129,10 +131,11 @@ logoutBtn?.addEventListener('click', () => {
   currentUser = null;
   saveState();
   logoutBtn?.classList.add('hidden');
+  deleteAccountBtn?.classList.add('hidden');
   show(mainPage);
 });
 
-// --- 회원가입용 날짜 셀렉트 채우기 ---
+// --- 회원가입용 날짜 셀렉트 ---
 (function fillBirthSelects(){
   const y = document.getElementById('birthYear');
   const m = document.getElementById('birthMonth');
@@ -190,21 +193,67 @@ loginForm?.addEventListener('submit', (e) => {
   loginForm.reset();
 });
 
-// --- hob.html(iframe)에서 완료 신호 받기 ---
+// --- 메시지 수신 (핵심!) ---
 window.addEventListener('message', (ev) => {
-  if (ev?.data?.type !== 'HOBBY_DONE') return;
+  const data = ev?.data;
 
-  const { selectedHobbies = [], chosenHobby = '', crewChoice = null } = ev.data;
-  if (!currentUser) return;
+  // 1) 크루 상세 페이지 열기
+  if (data?.type === 'OPEN_CREW') {
+    localStorage.setItem('pendingCrew', JSON.stringify({
+      selectedHobbies: data.selectedHobbies || [],
+      chosenHobby: data.chosenHobby || '',
+      crewChoice: data.crewChoice || null
+    }));
+    window.location.href = 'Crew/crew.html';
+    return;
+  }
 
-  currentUser.hobbyCompleted = true;
-  currentUser.hobbies = selectedHobbies;
-  currentUser.chosenHobby = chosenHobby;
-  currentUser.crewChoice = crewChoice;
+  // 2) 바로 완료(나중에 선택)
+  if (data?.type === 'HOBBY_DONE') {
+    const { selectedHobbies = [], chosenHobby = '', crewChoice = null } = data;
+    if (!currentUser) return;
 
-  const i = users.findIndex(u => u.id === currentUser.id);
-  if (i !== -1) users[i] = currentUser;
+    currentUser.hobbyCompleted = true;
+    currentUser.hobbies = selectedHobbies;
+    currentUser.chosenHobby = chosenHobby;
+    currentUser.crewChoice = crewChoice;
 
+    const i = users.findIndex(u => u.id === currentUser.id);
+    if (i !== -1) users[i] = currentUser;
+
+    saveState();
+    showMyPage();
+  }
+});
+
+// --- 현재 로그인한 계정만 삭제 ---
+deleteAccountBtn?.addEventListener('click', () => {
+  if (!currentUser) return alert('로그인 상태가 아닙니다.');
+  if (!confirm(`정말 '${currentUser.id}' 계정을 삭제할까요? 이 계정의 설문/크루 선택도 함께 삭제됩니다.`)) return;
+
+  users = (users || []).filter(u => u.id !== currentUser.id);
+  currentUser = null;
   saveState();
-  showMyPage();
+
+  try { hobFrame?.contentWindow?.postMessage({ type: 'RESET_HOBBY' }, '*'); } catch {}
+  if (hobFrame) hobFrame.src = 'Hobby/hob.html?t=' + Date.now();
+
+  show(mainPage);
+  alert('계정이 삭제됐습니다.');
+});
+
+// --- 전체 데이터 초기화 ---
+resetBtn?.addEventListener('click', () => {
+  if (!confirm('모든 회원 데이터(users/currentUser)가 삭제됩니다. 진행할까요?')) return;
+
+  users = [];
+  currentUser = null;
+  try { localStorage.removeItem('users'); } catch {}
+  try { localStorage.removeItem('currentUser'); } catch {}
+
+  try { hobFrame?.contentWindow?.postMessage({ type: 'RESET_HOBBY' }, '*'); } catch {}
+  if (hobFrame) hobFrame.src = 'Hobby/hob.html?t=' + Date.now();
+
+  show(mainPage);
+  alert('초기화 완료!');
 });

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>크루 상세</title>
+  <link rel="stylesheet" href="./crew.css" />
+  <script defer src="./crew.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="back" href="../main.html">← 메인</a>
+    <h1>크루 상세</h1>
+    <div></div>
+  </header>
+
+  <main class="wrap">
+    <section class="detail">
+      <div class="photo">
+        <img id="crewImg" alt="crew"/>
+      </div>
+
+      <div class="info">
+        <div class="row"><span class="label">크루명</span><span id="crewName">-</span></div>
+        <div class="row"><span class="label">선택 취미</span><span id="crewHobby">-</span></div>
+        <div class="row"><span class="label">모임</span><span id="crewTime">-</span></div>
+        <div class="row"><span class="label">장소</span><span id="crewLoc">-</span></div>
+        <div class="row"><span class="label">인원</span><span id="crewMembers">-</span></div>
+
+        <div class="desc">
+          <div class="label">크루 소개</div>
+          <p id="crewDesc">즐겁게 함께하는 소모임입니다.</p>
+        </div>
+
+        <button id="applyBtn" class="primary">참가 신청</button>
+      </div>
+    </section>
+
+    <!-- 4. 크루 가입 정보 (모형) -->
+    <section class="join-card">
+      <h2>크루 가입 정보</h2>
+      <div class="form">
+        <label>제목 <input id="joinTitle" placeholder="예: 첫 참여비 입금" /></label>
+        <label>계좌 <input id="joinBank" placeholder="예: 카뱅 3333-..." /></label>
+        <button id="joinSubmit" class="secondary">가입 신청</button>
+      </div>
+      <div class="gallery">
+        <div class="title">기록</div>
+        <div class="grid">
+          <div class="item">img</div><div class="item">img</div>
+          <div class="item">img</div><div class="item">img</div>
+          <div class="item">img</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 하단 나가기 -->
+  <div class="exit-bar">
+    <button id="leaveBtn" class="ghost">나가기</button>
+  </div>
+
+  <!-- 2-7 확인 모달 -->
+  <div class="modal" id="confirmModal" hidden>
+    <div class="dialog">
+      <p>참여하시겠습니까?</p>
+      <div class="actions">
+        <button id="confirmOk" class="primary">확인</button>
+        <button id="confirmCancel">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2-8 완료 모달 -->
+  <div class="modal" id="doneModal" hidden>
+    <div class="dialog">
+      <p>참여신청이 완료되었습니다.</p>
+      <div class="actions">
+        <button id="doneOk" class="primary">확인</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

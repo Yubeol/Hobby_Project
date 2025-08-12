@@ -8,7 +8,7 @@ const recommendList = document.querySelector('.recommend-list');
 const crewList = document.getElementById('crewList');
 const skipCrew = document.getElementById('skipCrew');
 
-// ====== STEP1 → STEP2 (★ 누락되어 있던 부분 추가) ======
+// ====== STEP1 → STEP2 ======
 nextBtn?.addEventListener('click', () => {
   const selected = document.querySelectorAll('input[name="hobby"]:checked');
   if (selected.length === 0) {
@@ -23,15 +23,11 @@ nextBtn?.addEventListener('click', () => {
 window.addEventListener('message', (e) => {
   if (e?.data?.type !== 'RESET_HOBBY') return;
 
-  // 선택 초기화
   document.querySelectorAll('input[name="hobby"]').forEach(el => el.checked = false);
-
-  // 화면 상태 초기화
   step1.classList.remove('hidden');
   step2.classList.add('hidden');
   step3.classList.add('hidden');
 
-  // 크루 목록/선택 초기화
   if (crewList) {
     crewList.innerHTML = '';
     delete crewList.dataset.hobby;
@@ -95,7 +91,7 @@ recommendList?.addEventListener('click', (e) => {
   step3.classList.remove('hidden');
 });
 
-// ====== STEP3: 참여하기 → 부모에 완료 신호 ======
+// ====== STEP3: 참여하기 → 부모에 상세 페이지 열기 요청 ======
 crewList?.addEventListener('click', (e) => {
   const btn = e.target.closest('.crew-join');
   if (!btn) return;
@@ -107,15 +103,16 @@ crewList?.addEventListener('click', (e) => {
   const selected = [...document.querySelectorAll('input[name="hobby"]:checked')]
                     .map(el => el.value);
 
+  // 상세 페이지로 이동하도록 부모에 요청
   window.parent.postMessage({
-    type: 'HOBBY_DONE',
+    type: 'OPEN_CREW',
     selectedHobbies: selected,
     chosenHobby: hobby,
     crewChoice: choice
   }, '*');
 });
 
-// ====== STEP3: 나중에 하기 ======
+// ====== STEP3: 나중에 하기(바로 완료 처리) ======
 skipCrew?.addEventListener('click', () => {
   const hobby = crewList.dataset.hobby || '';
   const selected = [...document.querySelectorAll('input[name="hobby"]:checked')]
