@@ -1,0 +1,7 @@
+.wrap { max-width: 880px; margin: 0 auto; }
+.crew-form label { display:block; }
+.crew-form input, .crew-form textarea {
+  width: 100%; box-sizing: border-box; border:1px solid #ddd; border-radius:10px; padding:10px;
+}
+.preview { margin-top: 12px; display:flex; justify-content:center; }
+.preview img { max-width: 100%; max-height: 260px; border-radius: 16px; box-shadow: 0 6px 16px rgba(0,0,0,.06); display:none; }

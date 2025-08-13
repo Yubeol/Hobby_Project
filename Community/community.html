@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>커뮤니티</title>
+
+  <!-- 기존 전역 스타일 재사용 -->
+  <link rel="stylesheet" href="../style.css">
+  <!-- 커뮤니티 전용 스타일 -->
+  <link rel="stylesheet" href="./community.css">
+</head>
+<body>
+  <header class="bar">
+    <a class="back" href="../main.html">← 메인</a>
+    <h1>커뮤니티</h1>
+    <div></div>
+  </header>
+
+  <main class="wrap">
+    <!-- 탭 -->
+    <div class="tabs">
+      <button class="tab active" data-board="free">자유게시판</button>
+      <button class="tab" data-board="secret">비밀게시판</button>
+      <button class="tab" data-board="info">정보게시판</button>
+      <div class="spacer"></div>
+      <button id="postWrite" class="primary">글쓰기</button>
+    </div>
+
+    <!-- 목록 -->
+    <section id="postList" class="card">
+      <div class="list-head">
+        <span class="col-no">NO</span>
+        <span class="col-title">제목</span>
+        <span class="col-author">작성자</span>
+        <span class="col-time">작성시간</span>
+        <span class="col-views">조회수</span>
+      </div>
+      <div id="postRows"></div>
+
+      <div class="pager">
+        <button id="prevPage" class="ghost">◀</button>
+        <span id="pageInfo">1 / 1</span>
+        <button id="nextPage" class="ghost">▶</button>
+      </div>
+    </section>
+
+    <!-- 상세 -->
+    <section id="postDetail" class="card hidden">
+      <div class="detail-head">
+        <h2 id="dTitle">-</h2>
+        <div class="meta">
+          <span id="dAuthor">-</span> · <span id="dTime">-</span> · 조회 <span id="dViews">0</span>
+        </div>
+      </div>
+      <div id="dBody" class="detail-body"></div>
+      <div class="actions">
+        <button id="postEdit" class="secondary">수정</button>
+        <button id="postDelete" class="ghost">삭제</button>
+        <div class="spacer"></div>
+        <button id="postClose" class="ghost">목록</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- 작성/수정 모달 -->
+  <div class="modal" id="postModal" hidden>
+    <div class="dialog">
+      <h3 id="mTitle">글 쓰기</h3>
+      <input id="mInputTitle" placeholder="글 제목" />
+      <textarea id="mInputBody" rows="10" placeholder="내용을 입력해주세요."></textarea>
+      <div class="actions">
+        <button id="mCancel" class="ghost">취소</button>
+        <button id="mSave" class="primary">등록</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 삭제 확인 모달 -->
+  <div class="modal" id="confirmDelete" hidden>
+    <div class="dialog">
+      <p>게시글을 삭제하시겠습니까?</p>
+      <div class="actions">
+        <button id="delNo" class="ghost">아니요</button>
+        <button id="delYes" class="primary">네</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./community.js" defer></script>
+</body>
+</html>

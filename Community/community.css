@@ -1,0 +1,31 @@
+/* 레이아웃 */
+.wrap{ max-width: 960px; margin: 0 auto; }
+
+.tabs{ display:flex; gap:8px; align-items:center; margin:14px 0; }
+.tab{ padding:8px 12px; border-radius:999px; background:#f1f1f4; border:1px solid transparent; }
+.tab.active{ background:#e6ecff; border-color:#cdd9ff; }
+
+.card{ background:#fff; border-radius:16px; box-shadow:0 6px 16px rgba(0,0,0,.06); padding:12px; }
+
+/* 목록 */
+.list-head, .list-row{ display:flex; align-items:center; gap:8px; padding:10px 8px; }
+.list-head{ font-weight:600; color:#555; border-bottom:1px solid #eee; }
+.list-row{ border-bottom:1px solid #f5f5f5; cursor:pointer; }
+.list-row:hover{ background:#fafafa; }
+
+.col-no{ width:60px; }
+.col-title{ flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.col-author{ width:110px; }
+.col-time{ width:160px; }
+.col-views{ width:80px; text-align:right; }
+
+.pager{ display:flex; justify-content:center; gap:12px; padding:12px 0; }
+
+/* 상세 */
+.detail-head h2{ margin:4px 0 6px; }
+.detail-body{ white-space:pre-wrap; line-height:1.6; padding:10px 0; }
+
+/* 모달 입력 */
+.modal .dialog input, .modal .dialog textarea{
+  width:100%; border:1px solid #ddd; border-radius:10px; padding:10px; box-sizing:border-box;
+}

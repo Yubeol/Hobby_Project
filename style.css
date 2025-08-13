@@ -115,3 +115,6 @@ button.ghost { background:#fff; color:#333; }
 /* 긴 텍스트 대비 */
 .pill { word-break: break-word; }
 
+/* style.css 에 추가(선택) */
+.link-heading{ cursor:pointer; text-decoration:none; color:inherit; }
+.link-heading:hover{ text-decoration:underline; }

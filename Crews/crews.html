@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>크루 만들기</title>
+  <!-- 전역 스타일 재사용 -->
+  <link rel="stylesheet" href="../style.css" />
+  <!-- 크루 생성 전용 -->
+  <link rel="stylesheet" href="./create.css" />
+  <script defer src="./create.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="back" href="../main.html">← 메인</a>
+    <h1 id="pageTitle">크루 만들기</h1>
+    <div></div>
+  </header>
+
+  <main class="wrap">
+    <form id="crewForm" class="card crew-form">
+      <div class="grid-2">
+        <label>크루명
+          <input id="name" placeholder="예: 초보 검도 크루" required />
+        </label>
+        <label>카테고리/취미
+          <input id="hobby" placeholder="예: 검도" />
+        </label>
+        <label>모임 요일·시간
+          <input id="time" placeholder="예: 화·목 20:00" />
+        </label>
+        <label>장소
+          <input id="loc" placeholder="예: 신촌" />
+        </label>
+        <label>정원(인원)
+          <input id="members" type="number" min="1" step="1" placeholder="예: 16" />
+        </label>
+        <label>대표 이미지 URL
+          <input id="img" placeholder="https://…" />
+        </label>
+      </div>
+
+      <label>크루 소개
+        <textarea id="desc" rows="6" placeholder="크루에 대해 소개해주세요."></textarea>
+      </label>
+
+      <div class="preview">
+        <img id="previewImg" alt="preview" />
+      </div>
+
+      <div class="actions">
+        <button type="button" id="cancelBtn" class="ghost">취소</button>
+        <button type="submit" id="saveBtn" class="primary">저장</button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>
