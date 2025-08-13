@@ -31,12 +31,22 @@ const goSignup     = document.getElementById('goSignup');
 const goLogin      = document.getElementById('goLogin');
 const goMy         = document.getElementById('goMy');
 
+// 커뮤니티 인기글 카드
+const hotCards = [
+  document.getElementById('hotPost1'),
+  document.getElementById('hotPost2'),
+  document.getElementById('hotPost3')
+];
+
 // 추가 버튼
 const deleteAccountBtn = document.getElementById('deleteAccountBtn');
 const resetBtn         = document.getElementById('resetBtn');
 
 const myInfo       = document.getElementById('myInfo');
 const myHobbyBox   = document.getElementById('myHobbyBox');
+
+// ✅ 추가: 크루 목록 버튼 참조
+const openCrewListBtn = document.getElementById('openCrewListBtn');
 
 // --- 유틸 / 네비 ---
 function hideAll() {
@@ -49,7 +59,11 @@ function show(page) {
   const isIn = !!currentUser;
   logoutBtn?.classList.toggle('hidden', !isIn);
   deleteAccountBtn?.classList.toggle('hidden', !isIn);
+
+  // ✅ 메인 보여줄 때 인기글 렌더
+  if (page === mainPage) renderCommunityHot();
 }
+
 function showAuth(which = 'login') {
   hideAll();
   authPage?.classList.remove('hidden');
@@ -128,12 +142,69 @@ function renderMyPage() {
                        : a.status==='approved' ? '승인'
                        : '거절';
           chip.textContent = `${a.crewName} · ${status}`;
-          // 상태 색상 클래스 추가
           chip.classList.add(a.status); // pending / approved / rejected
           myHobbyBox.appendChild(chip);
         });
       }
     } catch {}
+  }
+}
+
+/* ===== 커뮤니티 인기글 (전역) ===== */
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m])); }
+function formatTime(ts){
+  const d = new Date(Number(ts || Date.now()));
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'),
+        da=String(d.getDate()).padStart(2,'0'), hh=String(d.getHours()).padStart(2,'0'),
+        mm=String(d.getMinutes()).padStart(2,'0');
+  return `${y}-${m}-${da} ${hh}:${mm}`;
+}
+function renderCommunityHot() {
+  if (!hotCards?.length) return;
+
+  // 1) 게시글 로드
+  let posts = [];
+  try { posts = JSON.parse(localStorage.getItem('posts') || '[]'); } catch {}
+
+  // 2) 정렬: 추천(likes) → 조회수(views) → 최신(createdAt)
+  posts.sort((a, b) => {
+    const la = Number(a.likes || 0), lb = Number(b.likes || 0);
+    if (lb !== la) return lb - la;
+    const va = Number(a.views || 0), vb = Number(b.views || 0);
+    if (vb !== va) return vb - va;
+    return Number(b.createdAt || 0) - Number(a.createdAt || 0);
+  });
+
+  const top3 = posts.slice(0, 3);
+
+  // 3) 카드 채우기
+  for (let i = 0; i < hotCards.length; i++) {
+    const card = hotCards[i];
+    const p = top3[i];
+    if (!card) continue;
+
+    if (!p) {
+      card.innerHTML = `<div class="hot-empty">인기 게시글이 없습니다.</div>`;
+      continue;
+    }
+
+    const title = escapeHtml(p.title || '(제목 없음)');
+    const author = escapeHtml(p.authorId || '익명');
+    const when = formatTime(p.createdAt);
+    const views = Number(p.views || 0);
+    const likes = Number(p.likes || 0);
+
+    card.innerHTML = `
+      <a href="Community/community.html" aria-label="${title}">
+        <div class="hot-title">${title}</div>
+        <div class="hot-meta">
+          <span>${author}</span>
+          <span>${when}</span>
+          <span>👁 ${views}</span>
+          <span>👍 ${likes}</span>
+        </div>
+      </a>
+    `;
   }
 }
 
@@ -144,6 +215,8 @@ if (currentUser) {
   show(mainPage);
   logoutBtn?.classList.add('hidden');
   deleteAccountBtn?.classList.add('hidden');
+  // ✅ 메인으로 시작하면 인기글 한번 채우기
+  renderCommunityHot();
 }
 
 // --- 네비 ---
@@ -153,6 +226,11 @@ toLoginBtn?.addEventListener('click', () => showAuth('login'));
 goSignup?.addEventListener('click', () => showAuth('signup'));
 goLogin?.addEventListener('click', () => showAuth('login'));
 goMy?.addEventListener('click', () => currentUser ? showMyPage() : showAuth('login'));
+
+// ✅ 추가: 첫 번째 크루 아이콘 클릭 → 목록 페이지로 이동
+openCrewListBtn?.addEventListener('click', () => {
+  window.location.href = 'CrewList/crewList.html';
+});
 
 logoutBtn?.addEventListener('click', () => {
   currentUser = null;
