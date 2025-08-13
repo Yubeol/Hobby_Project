@@ -7,8 +7,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Open hobby.html",
-            "file": "c:\\Users\\USER\\Desktop\\취미 프로젝트\\hobby.html"
+            "name": "Open main.html",
+            "file": "c:\\Users\\USER\\Desktop\\취미 프로젝트\\main.html"
         }
     ]
 }

@@ -102,6 +102,11 @@ button.ghost { background:#fff; color:#333; }
 .footer .ft-title{font-weight:600;margin-bottom:6px}
 .footer a{display:block;color:#333;text-decoration:none;margin:4px 0}
 
+.ft-title i {
+  color: #E4405F; /* 인스타그램 로고 색상 */
+  margin-right: 5px;
+}
+
 /* 상태별 칩 색상 (추가) */
 .pill.pending  { background: #fff4d6; color: #a36b00; border-color: #ffe2a3; }
 .pill.approved { background: #e7f9e7; color: #136b13; border-color: #c8efc8; }
@@ -109,4 +114,4 @@ button.ghost { background:#fff; color:#333; }
 
 /* 긴 텍스트 대비 */
 .pill { word-break: break-word; }
-  
+

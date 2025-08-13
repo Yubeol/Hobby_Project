@@ -107,11 +107,13 @@ function renderMyPage() {
       s.textContent = `크루: ${c.name} (${c.loc} · ${c.time})`;
       myHobbyBox.appendChild(s);
     }
+
     // ---- (추가) 내 신청 현황 표시 ----
     try {
       const apps = JSON.parse(localStorage.getItem('crewApplications') || '[]')
                     .filter(a => a.applicantId === currentUser.id)
                     .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+
       if (apps.length) {
         const boxTitle = document.createElement('div');
         boxTitle.style.marginTop = '12px';
@@ -119,12 +121,16 @@ function renderMyPage() {
         boxTitle.textContent = '내 신청 현황';
         myHobbyBox.appendChild(boxTitle);
 
-        apps.forEach(a=>{
-          const s = document.createElement('span');
-          s.className = 'pill';
-          const status = a.status==='pending'?'대기중':(a.status==='approved'?'승인':'거절');
-          s.textContent = `${a.crewName} · ${status}`;
-          myHobbyBox.appendChild(s);
+        apps.slice(0, 5).forEach(a => {
+          const chip = document.createElement('span');
+          chip.className = 'pill';
+          const status = a.status==='pending' ? '대기중'
+                       : a.status==='approved' ? '승인'
+                       : '거절';
+          chip.textContent = `${a.crewName} · ${status}`;
+          // 상태 색상 클래스 추가
+          chip.classList.add(a.status); // pending / approved / rejected
+          myHobbyBox.appendChild(chip);
         });
       }
     } catch {}

@@ -32,11 +32,12 @@
           <p id="crewDesc">즐겁게 함께하는 소모임입니다.</p>
         </div>
 
+        <!-- 기존 버튼 유지 -->
         <button id="applyBtn" class="primary">참가 신청</button>
       </div>
     </section>
 
-    <!-- 4. 크루 가입 정보 (모형) -->
+    <!-- 기존 가입 정보 카드 유지 -->
     <section class="join-card">
       <h2>크루 가입 정보</h2>
       <div class="form">
@@ -53,14 +54,27 @@
         </div>
       </div>
     </section>
+
+    <!-- ✅ 신청 관리(크루장 전용) — 추가 -->
+    <section id="manageSection" class="join-card" hidden>
+      <h2>신청 관리 (크루장)</h2>
+      <div class="table-wrap">
+        <table class="table" id="manageTable">
+          <thead>
+            <tr><th>신청자</th><th>제목</th><th>사유</th><th>상태</th><th>액션</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
   </main>
 
-  <!-- 하단 나가기 -->
+  <!-- 하단 나가기 (기존 유지) -->
   <div class="exit-bar">
     <button id="leaveBtn" class="ghost">나가기</button>
   </div>
 
-  <!-- 2-7 확인 모달 -->
+  <!-- (기존) 확인/완료 모달 유지 -->
   <div class="modal" id="confirmModal" hidden>
     <div class="dialog">
       <p>참여하시겠습니까?</p>
@@ -71,12 +85,37 @@
     </div>
   </div>
 
-  <!-- 2-8 완료 모달 -->
   <div class="modal" id="doneModal" hidden>
     <div class="dialog">
       <p>참여신청이 완료되었습니다.</p>
       <div class="actions">
         <button id="doneOk" class="primary">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ (추가) 신청 폼 모달 -->
+  <div class="modal" id="applicationModal" hidden>
+    <div class="dialog">
+      <h3 style="margin:0 0 10px">참가/가입 신청</h3>
+      <div class="form" style="flex-direction:column;align-items:stretch">
+        <input id="applyTitle"  placeholder="신청 제목 (예: 첫 참여 인사)" />
+        <input id="applyBank"   placeholder="계좌/연락처 (선택)" />
+        <textarea id="applyReason" rows="6" placeholder="가입 사유·자기소개를 적어주세요"></textarea>
+      </div>
+      <div class="actions">
+        <button id="applicationSubmit" class="primary">신청 보내기</button>
+        <button id="applicationCancel" class="ghost">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ (추가) 신청 접수 안내 모달 -->
+  <div class="modal" id="doneReceiveModal" hidden>
+    <div class="dialog">
+      <p>신청이 접수되었습니다. 크루장의 승인 후 참여가 확정됩니다.</p>
+      <div class="actions">
+        <button id="doneReceiveOk" class="primary">확인</button>
       </div>
     </div>
   </div>
