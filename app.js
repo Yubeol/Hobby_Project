@@ -49,6 +49,13 @@ const myHobbyBox   = document.getElementById('myHobbyBox');
 // ✅ 추가: 크루 목록 버튼 참조
 const openCrewListBtn = document.getElementById('openCrewListBtn');
 
+/* ++ added: 새 상단바의 버튼(기존과 ID 충돌 방지용) */
+const goMy2 = document.getElementById('goMy2');
+const openFavBtn2 = document.getElementById('openFavBtn2');
+const toFeedBtn = document.getElementById('toFeedBtn');
+const toMsgBtn  = document.getElementById('toMsgBtn');
+const openCategoryBtn = document.getElementById('openCategoryBtn');
+
 // --- 유틸 / 네비 ---
 function hideAll() {
   [mainPage, authPage, signupForm, loginForm, myPage, map, board, chartContainer].forEach(el => el?.classList.add('hidden'));
@@ -228,16 +235,34 @@ goSignup?.addEventListener('click', () => showAuth('signup'));
 goLogin?.addEventListener('click', () => showAuth('login'));
 goMy?.addEventListener('click', () => currentUser ? showMyPage() : showAuth('login'));
 
-// ✅ 추가: 첫 번째 크루 아이콘 클릭 → 목록 페이지로 이동
+// // ✅ 추가: 첫 번째 크루 아이콘 클릭 → 목록 페이지로 이동
 openCrewListBtn?.addEventListener('click', () => {
   window.location.href = 'CrewList/crewList.html';
 });
-
-// 즐겨찾기(찜) 목록 페이지로 이동
-openFavBtn?.addEventListener('click', () => {
-  window.location.href = 'CrewList/favorites.html';
+// ---- (추가) 상단바 아이콘도 크루 목록으로 이동 ----
+document.getElementById('openCrewListBtnTop')
+  ?.addEventListener('click', () => { location.href = 'CrewList/crewList.html'; });
+  // ---- (추가) data-go="crewlist" 속성으로도 잡아주기(아이디 없이도 동작)
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-go="crewlist"]');
+  if (el) location.href = 'CrewList/crewList.html';
 });
+// // 즐겨찾기(찜) 목록 페이지로 이동
+// openFavBtn?.addEventListener('click', () => {
+//   window.location.href = 'CrewList/favorites.html';
+// });
 
+/* ++ added: 새 상단바 버튼 이벤트 (기존 코드 영향 없음) */
+goMy2?.addEventListener('click', () => currentUser ? showMyPage() : showAuth('login'));
+openFavBtn2?.addEventListener('click', () => { window.location.href = 'CrewList/favorites.html'; });
+openCrewListBtn?.addEventListener('click', () => { window.location.href = 'CrewList/crewList.html'; });
+toMsgBtn?.addEventListener('click', () => alert('메시지 준비중입니다.'));
+openCategoryBtn?.addEventListener('click', () => alert('카테고리 패널 준비중입니다.'));
+['openCrewListBtn2', 'crewListBtn', 'crewBtnTop'].forEach(id => {
+  document.getElementById(id)?.addEventListener('click', () => {
+    window.location.href = 'CrewList/crewList.html';
+  });
+});
 logoutBtn?.addEventListener('click', () => {
   currentUser = null;
   saveState();

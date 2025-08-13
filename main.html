@@ -29,6 +29,84 @@
 
   <!-- 메인 -->
   <section id="mainPage" class="page">
+
+    <!-- ===================== 새 상단바 (FRIP 스타일) ===================== -->
+    <!-- ++ added: 기존 hero는 그대로 두고, 새 상단 바를 위에 추가 -->
+    <div class="fripbar">
+      <!-- 왼쪽: 카테고리 -->
+      <button type="button" id="openCategoryBtn" class="cat-btn" aria-label="카테고리">
+        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="3" y="3" width="4" height="4" rx="1"/><rect x="10" y="3" width="4" height="4" rx="1"/><rect x="17" y="3" width="4" height="4" rx="1"/>
+            <rect x="3" y="10" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="17" y="10" width="4" height="4" rx="1"/>
+            <rect x="3" y="17" width="4" height="4" rx="1"/><rect x="10" y="17" width="4" height="4" rx="1"/><rect x="17" y="17" width="4" height="4" rx="1"/>
+          </g>
+        </svg>
+        <span>카테고리</span>
+      </button>
+
+      <span class="vbar" aria-hidden="true"></span>
+
+      <!-- 로고(원하는 이미지 경로로 교체 가능) -->
+      <a href="main.html" class="brand-link" aria-label="호비 홈">
+        <img class="frip-logo" src="assets/hobi_logo_horizontal_from_source_v2.png" alt="호비 로고">
+      </a>
+
+      <!-- 통합 검색 -->
+      <div class="frip-search">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21 21l-4.3-4.3m1.3-5.7a7 7 0 11-14 0 7 7 0 0114 0z"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input id="mainSearch" type="text" placeholder="지금 생각나는 취미를 검색하세요." />
+        <button type="button" class="mic" aria-label="음성 검색">
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 14a3 3 0 003-3V6a3 3 0 10-6 0v5a3 3 0 003 3zm7-3a7 7 0 01-14 0m7 7v-2"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 오른쪽 액션 -->
+      <ul class="frip-actions">
+        <li>
+          <button type="button" class="act" id="openCrewListBtn">
+            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 5h16v12H4zM4 17l4 2h8l4-2" stroke="currentColor" fill="none" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+            <span>크루</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="act" id="toMsgBtn">
+            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 5h16v10H7l-3 3z" stroke="currentColor" fill="none" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+            <span>메시지</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="act" id="openFavBtn2">
+            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21s-7-4.2-7-10a4 4 0 017-2 4 4 0 017 2c0 5.8-7 10-7 10z"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+            </svg>
+            <span>찜</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="act" id="goMy2">
+            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/>
+              <path d="M4 20c1.8-3.5 5-5 8-5s6.2 1.5 8 5" fill="none" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <span>마이</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <!-- =================== /새 상단바 =================== -->
+
     <!-- 헤더 블럭(목업 스타일) -->
     <div class="hero">
       <div class="brand">타이틀</div>
@@ -81,7 +159,7 @@
       </div>
     </section>
 
-        <!-- 푸터 -->
+    <!-- 푸터 -->
     <footer class="footer">
       <div>
         <div class="ft-title">help</div>
