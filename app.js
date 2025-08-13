@@ -107,6 +107,27 @@ function renderMyPage() {
       s.textContent = `크루: ${c.name} (${c.loc} · ${c.time})`;
       myHobbyBox.appendChild(s);
     }
+    // ---- (추가) 내 신청 현황 표시 ----
+    try {
+      const apps = JSON.parse(localStorage.getItem('crewApplications') || '[]')
+                    .filter(a => a.applicantId === currentUser.id)
+                    .sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+      if (apps.length) {
+        const boxTitle = document.createElement('div');
+        boxTitle.style.marginTop = '12px';
+        boxTitle.style.fontWeight = '600';
+        boxTitle.textContent = '내 신청 현황';
+        myHobbyBox.appendChild(boxTitle);
+
+        apps.forEach(a=>{
+          const s = document.createElement('span');
+          s.className = 'pill';
+          const status = a.status==='pending'?'대기중':(a.status==='approved'?'승인':'거절');
+          s.textContent = `${a.crewName} · ${status}`;
+          myHobbyBox.appendChild(s);
+        });
+      }
+    } catch {}
   }
 }
 

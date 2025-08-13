@@ -35,3 +35,15 @@ body{margin:0;font-family:system-ui,apple sd gothic neo,Segoe UI,Roboto,Malgun G
 /* 하단 나가기 버튼 */
 .exit-bar{position:fixed;left:0;right:0;bottom:20px;display:flex;justify-content:center;pointer-events:none}
 .exit-bar .ghost{pointer-events:auto}
+
+/* 신청 폼 입력 */
+.dialog textarea{
+  width:100%; border:1px solid #ddd; border-radius:8px; padding:10px; resize:vertical;
+}
+
+/* 관리 테이블 */
+.table-wrap{overflow:auto}
+.table{width:100%; border-collapse:collapse; font-size:14px}
+.table th,.table td{border:1px solid #eee; padding:8px 10px; text-align:left; vertical-align:top}
+.table th{background:#f7f7fb}
+.table .actions{display:flex; gap:6px}
