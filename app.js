@@ -30,6 +30,7 @@ const logoutBtn    = document.getElementById('logoutBtn');
 const goSignup     = document.getElementById('goSignup');
 const goLogin      = document.getElementById('goLogin');
 const goMy         = document.getElementById('goMy');
+const openFavBtn = document.getElementById('openFavBtn');
 
 // 커뮤니티 인기글 카드
 const hotCards = [
@@ -230,6 +231,11 @@ goMy?.addEventListener('click', () => currentUser ? showMyPage() : showAuth('log
 // ✅ 추가: 첫 번째 크루 아이콘 클릭 → 목록 페이지로 이동
 openCrewListBtn?.addEventListener('click', () => {
   window.location.href = 'CrewList/crewList.html';
+});
+
+// 즐겨찾기(찜) 목록 페이지로 이동
+openFavBtn?.addEventListener('click', () => {
+  window.location.href = 'CrewList/favorites.html';
 });
 
 logoutBtn?.addEventListener('click', () => {
