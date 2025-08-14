@@ -223,3 +223,142 @@ manageTableBody?.addEventListener('click', (e)=>{
 });
 
 if (isLeader) renderManage();
+
+// =============== 찜 토글/가격/갤러리/후기 ===============
+const favToggle = document.getElementById('favToggle');
+const crewFeeEl = document.getElementById('crewFee');
+const reviewList = document.getElementById('reviewList');
+const starPick = document.getElementById('starPick');
+const reviewText = document.getElementById('reviewText');
+const saveReview = document.getElementById('saveReview');
+const avgStarsEl = document.getElementById('avgStars');
+const revCountEl = document.getElementById('revCount');
+const moreBtn = document.getElementById('moreReviews');
+
+function loadFavMap(){ try { return JSON.parse(localStorage.getItem('crewFavorites') || '{}'); } catch { return {}; } }
+function saveFavMap(m){ localStorage.setItem('crewFavorites', JSON.stringify(m)); }
+
+function loadReviews(){ try { return JSON.parse(localStorage.getItem('crewReviews') || '{}'); } catch { return {}; } }
+function saveReviews(v){ localStorage.setItem('crewReviews', JSON.stringify(v)); }
+
+const me2 = (()=>{ try { return JSON.parse(localStorage.getItem('currentUser')||'null'); } catch { return null; } })();
+const crewId = crew?.id || crewKey; // crews에서 만든 id 우선, 없으면 key 사용
+
+// 가격 표시
+if (crew?.fee) crewFeeEl.textContent = `${crew.fee}원`; else crewFeeEl.textContent = '';
+
+// 찜 토글 상태 초기화
+(function initFav(){
+  const m = loadFavMap();
+  const set = new Set(m[me2?.id] || []);
+  const on = me2?.id && set.has(crewId);
+  favToggle.classList.toggle('active', !!on);
+  favToggle.textContent = on ? '♥ 찜됨' : '♡ 찜';
+})();
+favToggle?.addEventListener('click', ()=>{
+  if(!me2){ alert('로그인 후 이용해 주세요.'); return; }
+  const m = loadFavMap();
+  const set = new Set(m[me2.id] || []);
+  if(set.has(crewId)) set.delete(crewId); else set.add(crewId);
+  m[me2.id] = [...set];
+  saveFavMap(m);
+  const on = set.has(crewId);
+  favToggle.classList.toggle('active', on);
+  favToggle.textContent = on ? '♥ 찜됨' : '♡ 찜';
+});
+
+// 갤러리(기존 더미 박스에 crew.photos가 있으면 렌더)
+(function renderGallery(){
+  const wrap = document.querySelector('.gallery .grid');
+  if (!wrap) return;
+  const photos = Array.isArray(crew?.photos) ? crew.photos : [];
+  if (!photos.length) return;
+  wrap.innerHTML = photos.map(u=>`<div class="item" style="background:none;padding:0"><img src="${u}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:8px;border:1px solid #eee"></div>`).join('');
+})();
+
+// 별점 선택 UI
+let myStars = 0;
+function drawStarPick(n){
+  starPick.innerHTML = Array.from({length:5},(_,i)=>`<button data-s="${i+1}">${i < n ? '★' : '☆'}</button>`).join('');
+}
+starPick?.addEventListener('click', (e)=>{
+  const b = e.target.closest('button[data-s]');
+  if(!b) return;
+  myStars = Number(b.dataset.s);
+  drawStarPick(myStars);
+});
+drawStarPick(0);
+
+// 리뷰 렌더/평균
+let showCount = 5;
+function getAllReviews(){
+  const map = loadReviews();
+  return map[crewId] || [];
+}
+function setAllReviews(arr){
+  const map = loadReviews();
+  map[crewId] = arr;
+  saveReviews(map);
+}
+function renderReviews(){
+  const arr = getAllReviews().sort((a,b)=> b.createdAt - a.createdAt);
+  const part = arr.slice(0, showCount);
+  reviewList.innerHTML = part.map(r=>`
+    <div class="review-item">
+      <div class="review-meta">${r.userId || '익명'} · ${new Date(r.createdAt).toLocaleDateString()}</div>
+      <div class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      <div class="review-body">${(r.body||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}</div>
+    </div>
+  `).join('') || `<div class="review-item">아직 리뷰가 없습니다.</div>`;
+
+  // 평균/개수
+  if (arr.length){
+    const sum = arr.reduce((s,r)=> s + Number(r.stars||0), 0);
+    const avg = +(sum/arr.length).toFixed(1);
+    avgStarsEl.textContent = `${avg}점`;
+    revCountEl.textContent = `(${arr.length}개)`;
+  } else {
+    avgStarsEl.textContent = `-`;
+    revCountEl.textContent = ``;
+  }
+}
+moreBtn?.addEventListener('click', ()=>{
+  showCount += 10;
+  renderReviews();
+});
+
+// 내 리뷰 불러와 별점/텍스트 프리필
+(function fillMine(){
+  if(!me2?.id) return;
+  const mine = getAllReviews().find(r=> r.userId === me2.id);
+  if (mine){
+    myStars = Number(mine.stars||0);
+    drawStarPick(myStars);
+    if (reviewText) reviewText.value = mine.body || '';
+  }
+})();
+
+saveReview?.addEventListener('click', ()=>{
+  if(!me2){ alert('로그인이 필요합니다.'); return; }
+  const body = (reviewText?.value||'').trim();
+  if (myStars < 1) { alert('별점을 선택해주세요.'); return; }
+  if (!body) { alert('후기를 입력해주세요.'); return; }
+
+  let arr = getAllReviews();
+  const idx = arr.findIndex(r=> r.userId === me2.id);
+  const rec = {
+    id: idx>=0 ? arr[idx].id : ('rev_' + Date.now()),
+    userId: me2.id,
+    stars: myStars,
+    body,
+    createdAt: Date.now()
+  };
+  if (idx>=0) arr[idx] = rec; else arr.push(rec);
+  setAllReviews(arr);
+  renderReviews();
+  alert('리뷰가 저장되었습니다.');
+});
+
+// 최초 렌더
+renderReviews();
+

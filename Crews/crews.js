@@ -67,6 +67,28 @@ if (editId) {
     }
   }
 }
+const feeEl    = document.getElementById('fee');
+const photosEl = document.getElementById('photos');
+
+// 수정 모드 채우기
+if (editId && data) {
+  feeEl.value = data.fee || '';
+  photosEl.value = Array.isArray(data.photos) ? data.photos.join(', ') : '';
+}
+
+// 저장 시
+const fee    = feeEl.value.trim();
+const photos = (photosEl.value||'').split(',').map(s=>s.trim()).filter(Boolean);
+
+if (editId) {
+  crews[i] = { ...crews[i], name, hobby, time, loc, members, img, desc, fee, photos,
+    updatedAt: Date.now(), updatedBy: currentUser?.id || 'member' };
+} else {
+  const newCrew = { id: store.nextId(), name, hobby, time, loc, members, img, desc, fee, photos,
+    createdAt: Date.now(), createdBy: currentUser?.id || 'member' };
+  crews.push(newCrew);
+}
+
 
 // 취소: 뒤로 가기(없으면 목록으로)
 cancelBtn?.addEventListener('click', () => {
@@ -117,3 +139,4 @@ form?.addEventListener('submit', (e) => {
   // 완료 후 목록으로 이동
   location.replace('../CrewList/crewList.html');
 });
+

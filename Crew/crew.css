@@ -47,3 +47,20 @@ body{margin:0;font-family:system-ui,apple sd gothic neo,Segoe UI,Roboto,Malgun G
 .table th,.table td{border:1px solid #eee; padding:8px 10px; text-align:left; vertical-align:top}
 .table th{background:#f7f7fb}
 .table .actions{display:flex; gap:6px}
+
+/* 오른쪽 정보 상자에 가격/찜 */
+.info .top-right{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.fav-toggle{border:1px solid #ddd;background:#fff;border-radius:999px;padding:6px 10px;cursor:pointer}
+.fav-toggle.active{color:#e11d48;border-color:#f5c2d6}
+.fee{font-weight:700}
+
+/* 후기 리스트 */
+.reviews{margin-top:24px}
+.review-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.review-item{background:#fff;border:1px solid #eee;border-radius:12px;padding:12px;margin:8px 0}
+.review-meta{font-size:12px;color:#666;margin-bottom:6px}
+.review-stars{font-size:14px}
+.review-form{margin-top:10px;display:grid;gap:8px}
+.review-form textarea{width:100%;border:1px solid #ddd;border-radius:8px;padding:10px}
+.star-input{display:flex;gap:6px;align-items:center}
+.star-input button{border:1px solid #ddd;background:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}

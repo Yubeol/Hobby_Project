@@ -9,7 +9,7 @@
 </head>
 <body>
   <header class="bar">
-    <a class="back" href="../main.html">← 메인</a>
+    <a class="back" href="../main.html#home">← 메인</a>
     <h1>크루 상세</h1>
     <div></div>
   </header>
@@ -26,6 +26,18 @@
         <div class="row"><span class="label">모임</span><span id="crewTime">-</span></div>
         <div class="row"><span class="label">장소</span><span id="crewLoc">-</span></div>
         <div class="row"><span class="label">인원</span><span id="crewMembers">-</span></div>
+
+        <!-- 가격/찜 토글 -->
+        <div class="top-right">
+          <div id="crewFee" class="fee"></div>
+          <button id="favToggle" class="fav-toggle">♡ 찜</button>
+        </div>
+
+        <!-- 평균 평점/후기 수 -->
+        <div class="row">
+          <span class="label">평점</span>
+          <span><b id="avgStars">-</b> <span id="revCount" style="color:#666"></span></span>
+        </div>
 
         <div class="desc">
           <div class="label">크루 소개</div>
@@ -52,6 +64,25 @@
           <div class="item">img</div><div class="item">img</div>
           <div class="item">img</div>
         </div>
+      </div>
+    </section>
+    
+    <!-- ✅ 후기 섹션 -->
+    <section class="join-card reviews">
+      <div class="review-head">
+        <h2 style="margin:0">리뷰</h2>
+        <button id="moreReviews" class="ghost">더보기</button>
+      </div>
+      <div id="reviewList"></div>
+
+      <!-- 작성/수정 폼 -->
+      <div class="review-form" id="reviewFormWrap">
+        <div class="star-input">
+          <span>내 별점:</span>
+          <div id="starPick"></div>
+        </div>
+        <textarea id="reviewText" rows="4" placeholder="후기를 입력해주세요. (최대 500자)"></textarea>
+        <button id="saveReview" class="secondary">리뷰 등록/수정</button>
       </div>
     </section>
 

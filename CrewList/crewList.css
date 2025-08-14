@@ -18,3 +18,14 @@
   font-size:18px; line-height:36px; cursor:pointer;
 }
 .fav-btn.active{ color:#e11d48; } /* 핑크톤 */
+
+/* === 별점/가격 뱃지 === */
+.card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.stars{font-size:14px;line-height:1}
+.stars .count{color:#777;margin-left:6px}
+.price-pill{
+  padding:4px 10px;border-radius:999px;border:1px solid #eee;background:#fff;
+  font-weight:600;font-size:13px
+}
+/* 상단 추천 배지 예시(옵션) */
+.badge{position:absolute;left:8px;top:8px;font-size:12px;padding:4px 8px;border-radius:999px;background:#fff0f4;color:#d81b60;border:1px solid #ffd1e3}

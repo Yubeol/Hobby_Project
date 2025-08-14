@@ -68,11 +68,14 @@ function show(page) {
   logoutBtn?.classList.toggle('hidden', !isIn);
   deleteAccountBtn?.classList.toggle('hidden', !isIn);
 
-  // ✅ 메인 보여줄 때 인기글 렌더
-  if (page === mainPage) renderCommunityHot();
+  // ✅ 메인 보여줄 때 인기글 + BEST 크루 렌더
+  if (page === mainPage) {
+    renderCommunityHot();
+    renderBestCrews(); // ← 이 줄 추가
+  }
 }
 
-function showAuth(which = 'login') {
+function showAuth(which = 'login') {  
   hideAll();
   authPage?.classList.remove('hidden');
   signupForm?.classList.toggle('hidden', which !== 'signup');
@@ -216,15 +219,34 @@ function renderCommunityHot() {
   }
 }
 
-// --- 초기 화면 ---
-if (currentUser) {
+// // --- 초기 화면 ---
+// if (currentUser) {
+//   currentUser.hobbyCompleted ? showMyPage() : showHobbyPage();
+// } else {
+//   show(mainPage);
+//   logoutBtn?.classList.add('hidden');
+//   deleteAccountBtn?.classList.add('hidden');
+//   // ✅ 메인으로 시작하면 인기글 한번 채우기
+//   renderCommunityHot();
+// }
+
+// --- 초기 화면 --- 
+const url = new URL(window.location.href);
+const forceHome = (url.hash === '#home') || (url.searchParams.get('home') === '1');
+
+if (forceHome) {
+  show(mainPage);                          // 메인 강제 표시
+  logoutBtn?.classList.toggle('hidden', !currentUser);
+  deleteAccountBtn?.classList.toggle('hidden', !currentUser);
+  renderCommunityHot();
+} else if (currentUser) {
   currentUser.hobbyCompleted ? showMyPage() : showHobbyPage();
 } else {
   show(mainPage);
   logoutBtn?.classList.add('hidden');
   deleteAccountBtn?.classList.add('hidden');
-  // ✅ 메인으로 시작하면 인기글 한번 채우기
   renderCommunityHot();
+  renderBestCrews(); // ← 이 줄 추가
 }
 
 // --- 네비 ---
@@ -393,3 +415,104 @@ resetBtn?.addEventListener('click', () => {
   show(mainPage);
   alert('초기화 완료!');
 });
+
+/* ===== BEST 크루: 별점 높은 순 상위 3 (카드 버전) ===== */
+function loadCrews(){ try { return JSON.parse(localStorage.getItem('crews') || '[]'); } catch { return []; } }
+function loadReviews(){ try { return JSON.parse(localStorage.getItem('crewReviews') || '{}'); } catch { return {}; } }
+function loadFavMap(){ try { return JSON.parse(localStorage.getItem('crewFavorites') || '{}'); } catch { return {}; } }
+function saveFavMap(m){ localStorage.setItem('crewFavorites', JSON.stringify(m)); }
+
+function getAvgAndCnt(crewId){
+  const map = loadReviews();
+  const arr = map[crewId] || [];
+  if (!arr.length) return { avg:0, cnt:0 };
+  const sum = arr.reduce((s,r)=> s + Number(r.stars||0), 0);
+  return { avg: +(sum/arr.length).toFixed(1), cnt: arr.length };
+}
+function starsHtml(avg){
+  const full = Math.floor(avg);
+  const half = avg - full >= 0.5 ? 1 : 0;
+  const empty = 5 - full - half;
+  return '★'.repeat(full) + (half ? '☆' : '') + '✩'.repeat(empty);
+}
+
+function renderBestCrews(){
+  const box = document.getElementById('bestGrid');
+  if (!box) return;
+
+  const crews = loadCrews();
+  const favMap = loadFavMap();
+  const favSet = (currentUser?.id) ? new Set(favMap[currentUser.id] || []) : new Set();
+
+  const ranked = crews.map(c=>{
+    const {avg, cnt} = getAvgAndCnt(c.id);
+    return {...c, _avg:avg, _cnt:cnt};
+  }).sort((a,b)=>{
+    if (b._avg !== a._avg) return b._avg - a._avg;   // 평균 별점 ↓
+    if (b._cnt !== a._cnt) return b._cnt - a._cnt;   // 리뷰 수 ↓
+    return (b.createdAt||0) - (a.createdAt||0);      // 최신 ↓
+  }).slice(0, 3);
+
+  if (!ranked.length){
+    box.innerHTML = `<div class="crew-card"><div class="body">등록된 크루가 없습니다.</div></div>`;
+    return;
+  }
+
+  box.innerHTML = ranked.map(c=>{
+    const isFav = favSet.has(c.id);
+    const fee = c.fee ? String(c.fee) : '';
+    const {avg, cnt} = getAvgAndCnt(c.id);
+    const img = c.img || 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop';
+    return `
+      <article class="crew-card" data-id="${c.id}">
+        <span class="badge">추천</span>
+        <button class="fav-btn ${isFav ? 'active' : ''}" data-id="${c.id}" aria-label="찜">${isFav ? '♥' : '♡'}</button>
+        <img src="${img}" alt="${c.name || 'Crew'}">
+        <div class="body">
+          <h3>${c.name || '이름없음'}</h3>
+          <div class="crew-meta">
+            <span>${c.hobby || '-'}</span>
+            <span>${c.loc || '-'}</span>
+            <span>${c.time || '-'}</span>
+            <span>${c.members ? String(c.members)+'명' : ''}</span>
+          </div>
+          ${c.desc ? `<div class="crew-desc">${c.desc}</div>` : ``}
+          <div class="card-foot">
+            <div class="stars" title="${avg}점">${starsHtml(avg)}<span class="count">(${cnt})</span></div>
+            ${fee ? `<div class="price-pill">${fee}원</div>` : ``}
+          </div>
+        </div>
+      </article>
+    `;
+  }).join('');
+
+  // 클릭 → 상세 페이지
+  box.querySelectorAll('.crew-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const id = card.getAttribute('data-id');
+      const c = crews.find(x=>x.id===id);
+      if (!c) return;
+      localStorage.setItem('pendingCrew', JSON.stringify({
+        selectedHobbies: [],
+        chosenHobby: c.hobby || '',
+        crewChoice: c
+      }));
+      location.href = 'Crew/crew.html';
+    });
+  });
+
+  // 찜 토글 (버튼만 클릭 전용)
+  box.querySelectorAll('.fav-btn').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      if (!currentUser){ alert('로그인 후 이용해 주세요.'); return; }
+      const id = btn.getAttribute('data-id');
+      const map = loadFavMap();
+      const set = new Set(map[currentUser.id] || []);
+      if (set.has(id)) set.delete(id); else set.add(id);
+      map[currentUser.id] = [...set];
+      saveFavMap(map);
+      renderBestCrews(); // 즉시 갱신
+    });
+  });
+}

@@ -72,19 +72,42 @@ button.ghost { background:#fff; color:#333; }
 }
 .small{padding:6px 10px;border-radius:999px;border:1px solid #e3e3e3}
 
-/* 베스트 크루 */
-.best-wrap{
-  background:#dedede;border-radius:36px;padding:22px;margin:12px 0 24px;border:1px solid #d7d7d7
-}
-.best-wrap h2{margin:0 0 14px;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.1)}
+/* ===== BEST 크루: 컴팩트 카드 3장 ===== */
 .best-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px
+  display:flex; gap:16px; overflow-x:auto; padding:6px 4px 10px;
+  scroll-snap-type:x proximity;
 }
-.best-card{
-  display:block;background:#fff;border-radius:36px;padding:18px;border:1px solid #eee;box-shadow:0 8px 24px rgba(0,0,0,.06)
+.best-grid .crew-card{
+  position:relative;
+  flex:0 0 280px;
+  background:#fff; border:1px solid #eee; border-radius:16px; padding:0;
+  box-shadow:0 6px 16px rgba(0,0,0,.06); scroll-snap-align:start;
+  cursor:pointer;
 }
-.best-card img{
-  width:100%;height:220px;object-fit:cover;border-radius:24px;display:block
+.best-grid .crew-card img{
+  width:100%; height:160px; object-fit:cover; display:block;
+  border-radius:16px 16px 0 0;
+}
+.best-grid .crew-card .body{ padding:12px 14px; }
+.best-grid .crew-card h3{ margin:6px 0 6px; font-size:16px; }
+.best-grid .crew-meta{ color:#666; font-size:12px; display:flex; gap:8px; flex-wrap:wrap; }
+.best-grid .crew-desc{ margin-top:6px; color:#555; font-size:13px; display:-webkit-box;
+  -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.best-grid .card-foot{ margin-top:8px; display:flex; justify-content:space-between; align-items:center; }
+.best-grid .stars{ font-size:13px; }
+.best-grid .stars .count{ color:#777; margin-left:6px; }
+.best-grid .price-pill{
+  padding:4px 10px; border-radius:999px; border:1px solid #eee; background:#fff; font-weight:600; font-size:12px;
+}
+/* 찜 하트 + 추천 배지 */
+.best-grid .fav-btn{
+  position:absolute; right:10px; top:10px; z-index:2;
+  border:1px solid #eee; background:#fff; border-radius:999px; padding:6px 10px;
+}
+.best-grid .fav-btn.active{ color:#e11d48; border-color:#f5c2d6; }
+.best-grid .badge{
+  position:absolute; left:10px; top:10px; z-index:2;
+  font-size:12px; padding:4px 8px; border-radius:999px; background:#fff0f4; color:#d81b60; border:1px solid #ffd1e3;
 }
 
 /* 커뮤니티 */
@@ -169,3 +192,18 @@ button.ghost { background:#fff; color:#333; }
   .act span{ display:none; }
   .frip-search{ padding:10px 12px; }
 }
+
+/* BEST 별점/가격 오버레이 */
+.best-card{ position:relative; }
+.best-badges{
+  position:absolute; left:14px; top:12px; display:flex; gap:8px; align-items:center;
+}
+.best-star{ background:#fff; border:1px solid #eee; border-radius:999px; padding:4px 8px; font-size:13px; }
+.best-fee{ background:#fff; border:1px solid #eee; border-radius:999px; padding:4px 8px; font-weight:600; font-size:13px; }
+
+.best-card{ position:relative; }
+.best-badges{ position:absolute; left:14px; top:12px; display:flex; gap:8px; align-items:center; }
+.best-star, .best-fee{
+  background:#fff; border:1px solid #eee; border-radius:999px; padding:4px 8px; font-size:13px;
+}
+.best-fee{ font-weight:600; }
